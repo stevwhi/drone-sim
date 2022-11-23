@@ -12,8 +12,8 @@ import javafx.scene.text.TextAlignment;
  *  Class to handle a canvas, used by different GUIs
  */
 public class MyCanvas {
-	int xCanvasSize = 512;				// constants for relevant sizes, default values set
-	int yCanvasSize = 512;
+	private int xCanvasSize = 512;				// constants for relevant sizes, default values set
+	private int yCanvasSize = 512;
 	GraphicsContext gc;
 
 	/**

@@ -19,8 +19,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-//add droneArena
-//drone -> child classes
+//can we use the ball code given to us - it feels too good to be true
+
+//future tasks:
+//load save file
+//scoreboard
+//tostring sideboard
+//add super defender
 
 public class DroneViewer extends Application{
 	private final int canvasSize = 512;
@@ -91,27 +96,43 @@ public class DroneViewer extends Application{
 
 	    
 	    //Add buttons
-	    Button btnBlue = new Button("Blue Ball");				
-	    btnBlue.setOnAction(new EventHandler<ActionEvent>() {
+	    Button btnAttack = new Button("Attack Drone");				
+	    btnAttack.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	        	da.addDrone(btnBlue.getText());								
+	        	
+	        	//gui input of speed
+	        	double speed = 0;
+	        	da.addAttackDrone(speed);								
 	           	drawWorld();
 	       }
 	    });
 	    
-	    Button btnRed = new Button("Red Ball");				
-	    btnRed.setOnAction(new EventHandler<ActionEvent>() {
+	    Button btnDefend = new Button("Defender Drone");				
+	    btnDefend.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	da.addDrone(btnRed.getText());								
+	        	
+	        	//gui input of speed
+	        	double speed = 0;
+	           	da.addDefenderDrone(speed);								
+	           	drawWorld();
+	       }
+	    });
+	    
+	    Button btnTarget = new Button("Target Drone");				
+	    btnTarget.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	           	
+	        	da.addTargetDrone();								
 	           	drawWorld();
 	       }
 	    });
 	    	
 	    														
 	    
-	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label("Add: "), btnBlue, btnRed);
+	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label("Add: "), btnAttack, btnDefend, btnTarget);
 	}
 	
 	
@@ -151,6 +172,7 @@ public class DroneViewer extends Application{
 		stagePrimary.setTitle("Drone Simulator");
 		BorderPane bp = new BorderPane();
 		
+		
 		//top
 		bp.setTop(setMenu());
 		
@@ -173,7 +195,8 @@ public class DroneViewer extends Application{
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long currentNanoTime) {
-				da.moveAllDrones();
+				//da.checkDrones();									// check the angle of all balls
+	            //da.adjustDrones();								// move all balls
 				drawWorld();
 			}
 		};

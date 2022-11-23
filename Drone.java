@@ -2,29 +2,42 @@ package droneGUI;
 
 
 
-public class Drone{
+public abstract class Drone{
 	protected double xPos, yPos, rad;
 	protected char col;
 	static int droneCount = 0;
 	protected int droneID;
 	
-	protected Drone(double xPos, double yPos) {
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.rad = 5; //when we have multiple types of drones, leave these as uninitialized here
-		this.col = 'r'; 
-		
+	protected Drone(double xPos, double yPos, double rad, char col) {
 		droneID = droneCount++;
 	}
 	
-	public void drawDrone(MyCanvas mc) {
-		mc.showCircle(xPos, yPos, rad, col);
-	}
+	//functions --------------------------------------------------------
 	
+
 	public void tryToMove(DroneArena da) {
 		//if da.canMoveHere -> move in current direction
 		//else -> change its direction
 	}
+	
+	/**
+	 * is ball at ox,oy size or hitting this ball
+	 * @param ox
+	 * @param oy
+	 * @param or
+	 * @return true if hitting
+	 */
+	public boolean hitting(double xPos, double yPos, double rad) {
+		return (xPos-this.xPos)*(xPos-this.xPos) + (yPos-this.yPos)*(yPos-this.yPos) 
+				< (rad+this.rad)*(rad+this.rad);
+	}		// hitting if a^2 = b^2 < rad^2
+	
+	//abstract functions-----------------------------------------------
+	protected abstract void checkDrone(DroneArena da);
+	
+	protected abstract void adjustDrone();
+	
+	protected abstract void drawDrone(MyCanvas mc);
 	
 	
 	//getters/setters--------------------------------------------------
@@ -49,6 +62,12 @@ public class Drone{
 	 * @return
 	 */
 	public int getID() {return droneID; }
+	
+	/**
+	 * return the identity of ball
+	 * @return
+	 */
+	public char getCol() {return col; }
 	
 	/** 
 	 * set the ball at position nx,ny
