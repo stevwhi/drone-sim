@@ -6,7 +6,7 @@ public class TargetDrone extends Drone {
 	
 	
 	public TargetDrone(double xPos, double yPos) {
-		super(xPos, yPos, 30, 'r');
+		super(xPos, yPos, 10, 'b');
 		// TODO Auto-generated constructor stub
 	}
 

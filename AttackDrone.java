@@ -13,12 +13,12 @@ public class AttackDrone extends Drone{
 	 * @param is
 	 */
 	protected AttackDrone(double xPos, double yPos, double angle, double speed) {
-		super(xPos, yPos, 30, 'g');
+		super(xPos, yPos, 5, 'r');
 		this.angle = angle;
 		this.speed = speed;
+		
+		
 	}
-
-	
 
 	/**
 	 * checkball - change angle of travel if hitting wall or another ball
@@ -47,5 +47,6 @@ public class AttackDrone extends Drone{
 	protected void drawDrone(MyCanvas mc) {
 		mc.showCircle(xPos, yPos, rad, col);
 	}
+	
 
 }

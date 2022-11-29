@@ -25,6 +25,9 @@ public class MyCanvas {
 		gc = g;
 		xCanvasSize = xcs;
 		yCanvasSize = ycs;
+		
+		gc.strokeText("drone simulation", 1, 1);
+		
 	}
 
 	public int getXCanvasSize() {
@@ -92,6 +95,7 @@ public class MyCanvas {
 	 * @param col
 	 */
 	public void showCircle(double x, double y, double rad, char col) {
+		
 		setFillColour(colFromChar(col));			// set the fill colour
 		showCircle(x, y, rad);						// show the circle
 	}

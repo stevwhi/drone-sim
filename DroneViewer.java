@@ -4,9 +4,11 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -171,7 +173,7 @@ public class DroneViewer extends Application{
 		//main
 		stagePrimary.setTitle("Drone Simulator");
 		BorderPane bp = new BorderPane();
-		
+		bp.setPadding(new Insets(10, 20, 10, 20));
 		
 		//top
 		bp.setTop(setMenu());
@@ -186,6 +188,11 @@ public class DroneViewer extends Application{
 		bp.setCenter(grp);
 		mc = new MyCanvas(canvas.getGraphicsContext2D(), canvasSize, canvasSize);
 		da = new DroneArena(canvasSize, canvasSize);
+		drawWorld();
+		
+		 //GraphicsContext gc = canvas.getGraphicsContext2D();
+		 //gc.strokeText("drone simulation", 1, 1);
+
 		
 		//right
 		rtPane = new VBox();
@@ -195,8 +202,8 @@ public class DroneViewer extends Application{
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long currentNanoTime) {
-				//da.checkDrones();									// check the angle of all balls
-	            //da.adjustDrones();								// move all balls
+				da.checkDrones();									// check the angle of all balls
+	            da.adjustDrones();								// move all balls
 				drawWorld();
 			}
 		};

@@ -5,7 +5,7 @@ public class DefenderDrone extends Drone{
 	double angle, speed;
 
 	protected DefenderDrone(double xPos, double yPos, double angle, double speed) {
-		super(xPos, yPos, 20, 'b');
+		super(xPos, yPos, 5, 'g');
 		this.angle = angle;
 		this.speed = speed;
 	}

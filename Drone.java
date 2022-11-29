@@ -10,6 +10,10 @@ public abstract class Drone{
 	
 	protected Drone(double xPos, double yPos, double rad, char col) {
 		droneID = droneCount++;
+		this.xPos = xPos;
+		this.yPos = yPos;
+		this.rad = rad;
+		this.col = col;
 	}
 	
 	//functions --------------------------------------------------------

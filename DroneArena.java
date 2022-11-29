@@ -15,6 +15,8 @@ public class DroneArena{
 		this.xDim = xDim;
 		this.yDim = yDim;
 		
+		
+		
 		//add drone types to arraylist
 		allDrones = new ArrayList<>();
 		
@@ -36,6 +38,7 @@ public class DroneArena{
 	 * @param bi
 	 */
 	public void drawArena(MyCanvas mc) {
+		
 		for(Drone d: allDrones) {
 			System.out.println(d.getID());
 			d.drawDrone(mc);
@@ -45,23 +48,11 @@ public class DroneArena{
 		
 	//not same id or position + cant find errors with draw world
 	public void addAttackDrone(double speed) {
-		double x = ranGen.nextDouble(xDim);
-		double y = ranGen.nextDouble(yDim);
-		
-		allDrones.add(new AttackDrone(x, y, ranGen.nextDouble(360), speed));
-		System.out.println("attacker");
-		System.out.println(x);
-		System.out.println(y);
+		allDrones.add(new AttackDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim), ranGen.nextDouble(360), speed));
 	}
 	
 	public void addDefenderDrone(double speed) {
-		double x = ranGen.nextDouble(xDim);
-		double y = ranGen.nextDouble(yDim);
-		
-		allDrones.add(new DefenderDrone(x, y, 0, speed));
-		System.out.println("defender");
-		System.out.println(x);
-		System.out.println(y);
+		allDrones.add(new DefenderDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim), 0, speed));
 	}
 	
 	public void addTargetDrone() {
