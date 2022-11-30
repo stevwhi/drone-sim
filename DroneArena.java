@@ -6,6 +6,7 @@ import java.util.Random;
 public class DroneArena{
 	double xDim, yDim;
 	private ArrayList<Drone> allDrones;
+	ArrayList<String> droneStrings;
 	private Random ranGen = new Random();
 	
 	
@@ -39,10 +40,8 @@ public class DroneArena{
 	 */
 	public void drawArena(MyCanvas mc) {
 		
-		for(Drone d: allDrones) {
-			System.out.println(d.getID());
-			d.drawDrone(mc);
-		}
+		for(Drone d: allDrones) d.drawDrone(mc);
+		
 	}
 		
 		
@@ -63,13 +62,18 @@ public class DroneArena{
 	 * check all drones .. see if need to change angle of moving drones, etc 
 	 */
 	public void checkDrones() {
-		for (Drone d : allDrones) d.checkDrone(this);	// check all balls
+		
+		for (Drone d : allDrones) d.checkDrone(this);// check all drones
+		
+		
 	}
 	/**
 	 * adjust all balls .. move any moving ones
 	 */
 	public void adjustDrones() {
-		for (Drone d : allDrones) d.adjustDrone();
+		for (Drone d : allDrones) {
+			d.adjustDrone();
+		}
 	}
 	
 	
@@ -95,6 +99,16 @@ public class DroneArena{
 				// if hitting, return angle between the other ball and this one.
 		
 		return ans;		// return the angle
+	}
+	
+	/**
+	 * return list of strings defining each ball
+	 * @return	drone position descriptions
+	 */
+	public ArrayList<String> describeAll() {
+		droneStrings = new ArrayList<>();
+		for (Drone d : allDrones) droneStrings.add(d.toString());			// add string defining each ball
+		return droneStrings;												// return string list
 	}
 	
 	

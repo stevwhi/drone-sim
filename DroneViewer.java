@@ -1,5 +1,7 @@
 package droneGUI;
 
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -31,6 +33,7 @@ import javafx.stage.Stage;
 
 public class DroneViewer extends Application{
 	private final int canvasSize = 512;
+	private ArrayList<String> droneStrings = new ArrayList<>();
 	
 	private AnimationTimer timer;								
 	private VBox rtPane;
@@ -48,6 +51,16 @@ public class DroneViewer extends Application{
 		//create menuBar
 		MenuBar menuBar = new MenuBar();		
 					
+		//file drop-down
+		Menu mFile = new Menu("File");
+		MenuItem mExit = new MenuItem("Exit");
+		mExit.setOnAction(new EventHandler<ActionEvent>() {
+		public void handle(ActionEvent a2) {
+				System.exit(0);
+			}
+		});
+		mFile.getItems().addAll(mExit);
+		
 		//help drop-down
 		Menu mHelp = new Menu("Help");
 		MenuItem mAbout = new MenuItem("About");
@@ -57,16 +70,6 @@ public class DroneViewer extends Application{
 			}
 		});
 		mHelp.getItems().addAll(mAbout);
-		
-		//file drop-down
-		Menu mFile = new Menu("File");
-		MenuItem mExit = new MenuItem("Exit");
-		mExit.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent a2) {
-				System.exit(0);
-			}
-		});
-		mFile.getItems().addAll(mExit);
 		
 		//add menus to menuBar
 		menuBar.getMenus().addAll(mFile, mHelp);
@@ -80,49 +83,72 @@ public class DroneViewer extends Application{
 	private HBox setButtons() {
 	    
 		//Run buttons
-		Button btnStart = new Button("Start");					
+		Button btnStart = new Button("Start");
+		Button btnStop = new Button("Pause");
+		
+		
+		btnStart.setStyle("-fx-background-color: #ffffff; \n -fx-text-fill: #000000; \n -fx-border-color: #000000;");
 	    btnStart.setOnAction(new EventHandler<ActionEvent>() {	
 	        @Override
 	        public void handle(ActionEvent event) {
-	        	timer.start();									
+	        	timer.start();
+	        
+	        		//black start
+	        		btnStart.setStyle("-fx-background-color: #000000; \n -fx-text-fill: #ffffff; \n -fx-border-color: #000000;");
+	        		
+	        		//white stop
+	        		btnStop.setStyle("-fx-background-color: #ffffff; \n-fx-text-fill: #000000; \n -fx-border-color: #000000;");
+	        	
 	       }
 	    });
 
-	    Button btnStop = new Button("Pause");					
+	    	
+	    btnStop.setStyle("-fx-background-color: #000000; \n -fx-text-fill: #ffffff; \n -fx-border-color: #000000;");
 	    btnStop.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	timer.stop();								
+	           	timer.stop();	
+	           	
+	          //black stop
+        		btnStop.setStyle("-fx-background-color: #000000; \n -fx-text-fill: #ffffff; \n -fx-border-color: #000000;");
+        		
+        		//white start
+        		btnStart.setStyle("-fx-background-color: #ffffff; \n -fx-text-fill: #000000; \n -fx-border-color: #000000;");
 	       }
 	    });
 
 	    
 	    //Add buttons
-	    Button btnAttack = new Button("Attack Drone");				
+	    Button btnAttack = new Button("Attack Drone");
+	    btnAttack.setStyle("-fx-background-color: #ff0000; \n -fx-text-fill: #ffffff; \n -fx-border-color: #000000;");
 	    btnAttack.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
 	        	
 	        	//gui input of speed
-	        	double speed = 0;
+	        	//double speed = 0;
+	        	double speed = 15;
 	        	da.addAttackDrone(speed);								
 	           	drawWorld();
 	       }
 	    });
 	    
-	    Button btnDefend = new Button("Defender Drone");				
+	    Button btnDefend = new Button("Defender Drone");	
+	    btnDefend.setStyle("-fx-background-color: #00ff00; \n -fx-text-fill: #000000; \n -fx-border-color: #000000;");
 	    btnDefend.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
 	        	
 	        	//gui input of speed
-	        	double speed = 0;
+	        	//double speed = 0;
+	        	double speed = 15;
 	           	da.addDefenderDrone(speed);								
 	           	drawWorld();
 	       }
 	    });
 	    
-	    Button btnTarget = new Button("Target Drone");				
+	    Button btnTarget = new Button("Target Drone");	
+	    btnTarget.setStyle("-fx-background-color: #0000ff; \n -fx-text-fill: #ffffff; \n -fx-border-color: #000000;");
 	    btnTarget.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
@@ -161,9 +187,27 @@ public class DroneViewer extends Application{
 		showMessage("About", "RJM's Solar System Demonstrator");
 	}	
 	
+	/** 
+	 * draw the world 
+	 */
 	public void drawWorld () {
 	 	mc.clearCanvas();						// set beige colour
 	 	da.drawArena(mc);
+	}
+	
+	/**
+	 * show where drones is, in pane on right
+	 */
+	public void drawStatus() {
+		//clear
+		rtPane.getChildren().clear();
+		
+		//display
+		droneStrings = da.describeAll();
+		for (String s : droneStrings) {
+			Label l = new Label(s); 		// turn description into a label
+			rtPane.getChildren().add(l);	// add label	
+		}	
 	}
 	
 	
@@ -202,9 +246,10 @@ public class DroneViewer extends Application{
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long currentNanoTime) {
-				da.checkDrones();									// check the angle of all balls
-	            da.adjustDrones();								// move all balls
+				da.checkDrones();									// check the angle of all drones
+	            da.adjustDrones();								// move all drones
 				drawWorld();
+				drawStatus();
 			}
 		};
 		

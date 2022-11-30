@@ -5,7 +5,7 @@ public class AttackDrone extends Drone{
 	double angle, speed;
 	//allow user to enter speed at interface
 	
-	/** Create game ball, size rad at xPos,yPos, moving at angle: angle and speed: speed 
+	/** Create Attack Drone, size rad at xPos,yPos, moving at angle: angle and speed: speed 
 	 * @param xPos
 	 * @param yPos
 	 * @param rad
@@ -16,13 +16,12 @@ public class AttackDrone extends Drone{
 		super(xPos, yPos, 5, 'r');
 		this.angle = angle;
 		this.speed = speed;
-		
-		
+			
 	}
 
 	/**
 	 * checkball - change angle of travel if hitting wall or another ball
-	 * @param b   ballArena
+	 * @param da   DroneArena
 	 */
 	@Override
 	protected void checkDrone(DroneArena da) {
@@ -31,8 +30,8 @@ public class AttackDrone extends Drone{
 	}
 
 	/**
-	 * adjustBall
-	 * Here, move ball depending on speed and angle
+	 * adjustDrone
+	 * Here, move drone depending on speed and angle
 	 */
 	@Override
 	protected void adjustDrone() {
@@ -46,6 +45,11 @@ public class AttackDrone extends Drone{
 	@Override
 	protected void drawDrone(MyCanvas mc) {
 		mc.showCircle(xPos, yPos, rad, col);
+	}
+
+	@Override
+	protected String getStrType() {
+		return "Attack Drone";
 	}
 	
 

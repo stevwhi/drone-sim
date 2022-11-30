@@ -31,6 +31,12 @@ public class DefenderDrone extends Drone{
 	protected void drawDrone(MyCanvas mc) {
 		mc.showCircle(xPos, yPos, rad, col);
 	}
+	
+	@Override
+	protected String getStrType() {
+		return "Defender Drone";
+	}
+	
 
 
 }

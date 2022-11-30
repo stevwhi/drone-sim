@@ -32,9 +32,16 @@ public abstract class Drone{
 	 * @return true if hitting
 	 */
 	public boolean hitting(double xPos, double yPos, double rad) {
-		return (xPos-this.xPos)*(xPos-this.xPos) + (yPos-this.yPos)*(yPos-this.yPos) 
-				< (rad+this.rad)*(rad+this.rad);
-	}		// hitting if a^2 = b^2 < rad^2
+		return (xPos-this.xPos)*(xPos-this.xPos) + (yPos-this.yPos)*(yPos-this.yPos) < (rad+this.rad)*(rad+this.rad);
+		// hitting if a^2 = b^2 < rad^2
+	}		
+	
+	/** 
+	 * return string describing ball
+	 */
+	public String toString() {
+		return getStrType()+" at "+Math.round(xPos)+", "+Math.round(yPos);
+	}
 	
 	//abstract functions-----------------------------------------------
 	protected abstract void checkDrone(DroneArena da);
@@ -43,6 +50,7 @@ public abstract class Drone{
 	
 	protected abstract void drawDrone(MyCanvas mc);
 	
+	protected abstract String getStrType();
 	
 	//getters/setters--------------------------------------------------
 	
@@ -57,24 +65,24 @@ public abstract class Drone{
 	 */
 	public double getYPos() { return yPos; }
 	/**
-	 * return radius of ball
+	 * return radius of drone
 	 * @return
 	 */
 	public double getRad() { return rad; }
 	/**
-	 * return the identity of ball
+	 * return the identity of drone
 	 * @return
 	 */
 	public int getID() {return droneID; }
 	
 	/**
-	 * return the identity of ball
+	 * return the identity of drone
 	 * @return
 	 */
 	public char getCol() {return col; }
 	
 	/** 
-	 * set the ball at position nx,ny
+	 * set the drone at position nx,ny
 	 * @param nx
 	 * @param ny
 	 */

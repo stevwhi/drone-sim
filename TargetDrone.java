@@ -22,10 +22,6 @@ public class TargetDrone extends Drone {
 		
 	}
 
-	
-	
-	
-	
 	@Override
 	protected void adjustDrone() {
 		// TODO Auto-generated method stub
@@ -36,6 +32,12 @@ public class TargetDrone extends Drone {
 	protected void drawDrone(MyCanvas mc) {
 		mc.showCircle(xPos, yPos, rad, col);
 	}
+	
+	@Override
+	protected String getStrType() {
+		return "Target Drone";
+	}
+	
 
 
 }
