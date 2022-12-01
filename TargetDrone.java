@@ -38,6 +38,9 @@ public class TargetDrone extends Drone {
 		return "Target Drone";
 	}
 	
-
+	@Override
+	protected String toStringForSave() {
+		return getStrType() + " is at " + xPos + " , " + yPos; 
+	}
 
 }

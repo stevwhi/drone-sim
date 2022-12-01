@@ -39,9 +39,11 @@ public abstract class Drone{
 	/** 
 	 * return string describing ball
 	 */
-	public String toString() {
+	public String toStringforDisplay() {
 		return getStrType()+" at "+Math.round(xPos)+", "+Math.round(yPos);
 	}
+	
+	
 	
 	//abstract functions-----------------------------------------------
 	protected abstract void checkDrone(DroneArena da);
@@ -51,6 +53,8 @@ public abstract class Drone{
 	protected abstract void drawDrone(MyCanvas mc);
 	
 	protected abstract String getStrType();
+	
+	protected abstract String toStringForSave();
 	
 	//getters/setters--------------------------------------------------
 	

@@ -1,6 +1,15 @@
 package droneGUI;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
+
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -40,6 +49,8 @@ public class DroneViewer extends Application{
 	
 	private DroneArena da;
 	private MyCanvas mc;
+	
+	private JFileChooser chooser = new JFileChooser();
 		
 	
 	//adding things -------------------------------------------------------------------
@@ -53,19 +64,38 @@ public class DroneViewer extends Application{
 					
 		//file drop-down
 		Menu mFile = new Menu("File");
+		
+		
+		MenuItem mSave = new MenuItem("Save Arena");
+		mSave.setOnAction(new EventHandler<ActionEvent>() {
+		public void handle(ActionEvent a) {
+				saveArena(da);
+			}
+		});
+		
+		MenuItem mLoad = new MenuItem("Load Arena");
+		mLoad.setOnAction(new EventHandler<ActionEvent>() {
+		public void handle(ActionEvent a) {
+				loadArena(loadArenaInfo());
+			}
+		});
+		
+		
 		MenuItem mExit = new MenuItem("Exit");
 		mExit.setOnAction(new EventHandler<ActionEvent>() {
-		public void handle(ActionEvent a2) {
+		public void handle(ActionEvent a) {
 				System.exit(0);
 			}
 		});
-		mFile.getItems().addAll(mExit);
+		
+		
+		mFile.getItems().addAll(mSave, mLoad, mExit);
 		
 		//help drop-down
 		Menu mHelp = new Menu("Help");
 		MenuItem mAbout = new MenuItem("About");
 		mAbout.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent a1) {
+			public void handle(ActionEvent a) {
 				showAbout();
 			}
 		});
@@ -209,6 +239,139 @@ public class DroneViewer extends Application{
 			rtPane.getChildren().add(l);	// add label	
 		}	
 	}
+	
+	private void saveArena(DroneArena da) {
+	
+		System.out.println("here");
+    	if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+    		
+    		File saveFile = chooser.getSelectedFile();
+    		try {
+    			FileOutputStream saveStream = new FileOutputStream(saveFile);
+    			byte[] strToBytes = da.toString().getBytes(StandardCharsets.UTF_8);
+    			saveStream.write(strToBytes);
+    			saveStream.close();
+    			System.out.println("Save successful");
+    		} catch (FileNotFoundException e) {
+    			e.printStackTrace();
+    		} catch (IOException e) {
+				e.printStackTrace();
+			} 
+    	}
+	}
+	
+	private String loadArenaInfo() {
+		String arenaInfo = "";
+    	//select file
+    	
+    	if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+    		File openFile = chooser.getSelectedFile();
+    		if(openFile.isFile()) {
+    			try {
+					FileInputStream openStream = new FileInputStream(openFile);
+					byte[] byteArr = new byte[(int)openFile.length()];
+					openStream.read(byteArr);
+					arenaInfo = new String(byteArr, StandardCharsets.UTF_8);
+					openStream.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+    		}else {
+    			System.out.println("not a file");
+    		}
+    	}
+    	
+    	return arenaInfo;
+	}
+	
+	private void loadArena(String ai) {
+    	//read and store text from file into variables
+    	
+    	//System.out.print(ai); //does print, problem with scanning
+		
+		
+		
+    	
+    	double[] arenaParams = new double[2];
+    	double[] droneParams = new double[4];
+    	String droneType = "";
+    	int arenaCounter = 0;
+    	int droneCounter = 0;
+    	
+    	String[] lines = ai.split("\n");
+    	
+    	for(int i = 0; i < lines.length; i++) {
+    		String[] words = lines[i].split(" ");
+    		
+    		if(containsDigit(lines[i])){
+    			for(int j = 0; j < words.length; j++) {
+        			
+    				//number on first line
+    				if(i == 0 && isNumeric(words[j])) {
+        				
+        				arenaParams[arenaCounter] = Integer.parseInt(words[j]);
+        				arenaCounter++;
+        			} else if(i != 0 && isNumeric(words[j])) {
+        				
+        				droneParams[droneCounter] = Integer.parseInt(words[j]);
+        				droneCounter++;
+        			}
+        			else if(words[j].equals("Attack") || words[j].equals("Defender") || words[j].equals("Target")){
+        				droneType = words[j];
+        			}
+        		}
+    			
+    			if(arenaCounter == 2) {
+    				da = new DroneArena(arenaParams[0], arenaParams[1]);
+    				drawWorld();
+    				arenaCounter = 0;
+    			}else if(droneCounter == 4 && droneType.equals("Attack")) {
+    				da.addAttackDrone(droneParams[3]);
+    				droneType = "";
+    				droneCounter = 0;
+    			}
+    			else if(droneCounter == 4 && droneType.equals("Defender")) {
+    				da.addDefenderDrone(droneParams[3]);
+    				droneType = "";
+    				droneCounter = 0;
+    			}
+    			else if(droneCounter == 2 && droneType.equals("Target")) {
+    				da.addTargetDrone();
+    				droneType = "";
+    				droneCounter = 0;
+    			}
+    			
+    		}
+    		
+    		
+    		
+    	}
+    	
+    }
+	
+	public static boolean containsDigit(String str) {
+    	char[] chars = str.toCharArray();
+    	
+    	for(char c: chars) {
+    		if(Character.isDigit(c)) return true;
+    	}
+    	
+    	return false;
+    }
+	
+	public static boolean isNumeric(String strNum) {
+    	if(strNum == null) return false;
+    	
+    	try {
+    		int x = Integer.parseInt(strNum);
+    	} catch (NumberFormatException e) {
+    		return false;
+    	}
+    	
+    	return true;
+    }
 	
 	
 	//main --------------------------------------------------------------------------

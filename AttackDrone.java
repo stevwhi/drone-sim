@@ -52,5 +52,13 @@ public class AttackDrone extends Drone{
 		return "Attack Drone";
 	}
 	
+	
+	@Override
+	protected String toStringForSave() {
+		return getStrType() + " is at " + xPos + " , " + yPos 
+				+ " and has speed " + speed + "and angle " + angle;
+
+	}
+	
 
 }

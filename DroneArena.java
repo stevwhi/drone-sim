@@ -29,6 +29,9 @@ public class DroneArena{
 	
 	
 	//functions------------------------------------------------------------------
+	public void removeAllDrones() {
+		allDrones.clear();
+	}
 	
 	public void updateAllDrones() {
 		for(Drone d: allDrones) d.tryToMove(this);
@@ -107,10 +110,27 @@ public class DroneArena{
 	 */
 	public ArrayList<String> describeAll() {
 		droneStrings = new ArrayList<>();
-		for (Drone d : allDrones) droneStrings.add(d.toString());			// add string defining each ball
+		for (Drone d : allDrones) droneStrings.add(d.toStringforDisplay());			// add string defining each ball
 		return droneStrings;												// return string list
 	}
 	
+	
+	@Override
+	public String toString() {
+		String aSize = "Arena size is " + xDim + " by " + yDim ;
+		String dPos = "";
+		
+		if(allDrones.isEmpty()){
+			dPos = "No Drones exist \n";
+		}
+		else {
+			for(int i = 0; i < allDrones.size(); i++) {
+				dPos += allDrones.get(i).toString() + "\n";
+			}			
+		}
+		
+		return aSize + "\n" + dPos;
+	}
 	
 	//getters/setters------------------------------------------------
 	/**
