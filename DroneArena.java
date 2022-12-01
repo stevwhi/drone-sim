@@ -7,7 +7,7 @@ public class DroneArena{
 	double xDim, yDim;
 	private ArrayList<Drone> allDrones;
 	ArrayList<String> droneStrings;
-	private Random ranGen = new Random();
+	
 	
 	
 	public DroneArena(double xDim, double yDim) {
@@ -22,9 +22,7 @@ public class DroneArena{
 		allDrones = new ArrayList<>();
 		
 		//add 1 goal drone, 1 blue drone, 1 red drone immediately
-		allDrones.add(new AttackDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim), ranGen.nextDouble(360), 15));
-		allDrones.add(new DefenderDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim), 0, 15));
-		allDrones.add(new TargetDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim)));
+		
 	}
 	
 	
@@ -49,16 +47,16 @@ public class DroneArena{
 		
 		
 	//not same id or position + cant find errors with draw world
-	public void addAttackDrone(double speed) {
-		allDrones.add(new AttackDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim), ranGen.nextDouble(360), speed));
+	public void addAttackDrone(double xPos, double yPos, double angle, double speed) {
+		allDrones.add(new AttackDrone(xPos, yPos, angle, speed));
 	}
 	
-	public void addDefenderDrone(double speed) {
-		allDrones.add(new DefenderDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim), 0, speed));
+	public void addDefenderDrone(double xPos, double yPos, double angle, double speed) {
+		allDrones.add(new DefenderDrone(xPos, yPos, angle, speed));
 	}
 	
-	public void addTargetDrone() {
-		allDrones.add(new TargetDrone(ranGen.nextDouble(xDim), ranGen.nextDouble(yDim)));
+	public void addTargetDrone(double xPos, double yPos) {
+		allDrones.add(new TargetDrone(xPos, yPos));
 	}
 	
 	/**
@@ -91,9 +89,9 @@ public class DroneArena{
 	 */
 	public double findDroneAngle(double xPos, double yPos, double rad, double angle, int notID) {
 		double ans = angle;
-		if (xPos < rad || xPos > xDim - rad) ans = 180 - ans;
+		if (xPos <= rad || xPos >= xDim - rad) ans = 180 - ans;
 			// if Drone hit (tried to go through) left or right walls, set mirror angle, being 180-angle
-		if (yPos < rad || yPos > yDim - rad) ans = - ans;
+		if (yPos <= rad || yPos >= yDim - rad) ans = - ans;
 			// if try to go off top or bottom, set mirror angle
 		
 		for (Drone d : allDrones) 
@@ -125,7 +123,7 @@ public class DroneArena{
 		}
 		else {
 			for(int i = 0; i < allDrones.size(); i++) {
-				dPos += allDrones.get(i).toString() + "\n";
+				dPos += allDrones.get(i).toStringForSave() + "\n";
 			}			
 		}
 		

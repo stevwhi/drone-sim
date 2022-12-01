@@ -40,7 +40,7 @@ public class DefenderDrone extends Drone{
 	@Override
 	protected String toStringForSave() {
 		return getStrType() + " is at " + xPos + " , " + yPos 
-				+ " and has speed " + speed + "and angle " + angle;
+				+ " and has angle " + angle + " and speed " + speed;
 
 	}
 	
