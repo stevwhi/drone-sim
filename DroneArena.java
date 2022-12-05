@@ -8,13 +8,18 @@ public class DroneArena{
 	private ArrayList<Drone> allDrones;
 	ArrayList<String> droneStrings;
 	
+	private Random ranGen = new Random();
+	
+	private double speed = 15; //make this customisable
 	
 	
-	public DroneArena(double xDim, double yDim) {
+	
+	public DroneArena(double xDim, double yDim, double speed) {
 		//parameters
 		
 		this.xDim = xDim;
 		this.yDim = yDim;
+		this.speed = speed;
 		
 		
 		
@@ -22,11 +27,19 @@ public class DroneArena{
 		allDrones = new ArrayList<>();
 		
 		//add 1 goal drone, 1 blue drone, 1 red drone immediately
+		allDrones.add(new AttackDrone(ranGen.nextDouble(getXSize()), ranGen.nextDouble(getYSize()), ranGen.nextDouble(360), speed));
+		allDrones.add(new DefenderDrone(ranGen.nextDouble(getXSize()), ranGen.nextDouble(getYSize()), ranGen.nextDouble(360), speed));
+		allDrones.add(new TargetDrone(ranGen.nextDouble(getXSize()), ranGen.nextDouble(getYSize())));
 		
 	}
 	
 	
 	//functions------------------------------------------------------------------
+	public void removeLastDrone() {
+		allDrones.remove(allDrones.size()-1);
+	}
+	
+	
 	public void removeAllDrones() {
 		allDrones.clear();
 	}
@@ -47,11 +60,11 @@ public class DroneArena{
 		
 		
 	//not same id or position + cant find errors with draw world
-	public void addAttackDrone(double xPos, double yPos, double angle, double speed) {
+	public void addAttackDrone(double xPos, double yPos, double angle) {
 		allDrones.add(new AttackDrone(xPos, yPos, angle, speed));
 	}
 	
-	public void addDefenderDrone(double xPos, double yPos, double angle, double speed) {
+	public void addDefenderDrone(double xPos, double yPos, double angle) {
 		allDrones.add(new DefenderDrone(xPos, yPos, angle, speed));
 	}
 	
@@ -115,7 +128,7 @@ public class DroneArena{
 	
 	@Override
 	public String toString() {
-		String aSize = "Arena size is " + xDim + " by " + yDim ;
+		String aSize = "Arena size is " + xDim + " by " + yDim + " and has a speed level of " + speed;
 		String dPos = "";
 		
 		if(allDrones.isEmpty()){
