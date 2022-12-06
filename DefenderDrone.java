@@ -12,7 +12,7 @@ public class DefenderDrone extends Drone{
 
 	@Override
 	protected void checkDrone(DroneArena da) {
-		angle = da.findDroneAngle(xPos, yPos, rad, angle, droneID);
+		angle = da.findDroneAngle(xPos, yPos, rad, angle, droneID, this);
 		
 	}
 
@@ -21,7 +21,7 @@ public class DefenderDrone extends Drone{
 	 * Here, move ball depending on speed and angle
 	 */
 	@Override
-	protected void adjustDrone() {
+	protected void adjustDrone(double speed) {
 		double radAngle = angle*Math.PI/180;		// put angle in radians
 		xPos += speed * Math.cos(radAngle);		// new X position
 		yPos += speed * Math.sin(radAngle);
@@ -40,7 +40,7 @@ public class DefenderDrone extends Drone{
 	@Override
 	protected String toStringForSave() {
 		return getStrType() + " is at " + xPos + " , " + yPos 
-				+ " and has angle " + angle + " and speed " + speed;
+				+ " and has angle " + angle;
 
 	}
 	

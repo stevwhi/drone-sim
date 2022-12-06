@@ -48,7 +48,7 @@ public abstract class Drone{
 	//abstract functions-----------------------------------------------
 	protected abstract void checkDrone(DroneArena da);
 	
-	protected abstract void adjustDrone();
+	protected abstract void adjustDrone(double speed);
 	
 	protected abstract void drawDrone(MyCanvas mc);
 	

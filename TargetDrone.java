@@ -18,12 +18,12 @@ public class TargetDrone extends Drone {
 	
 	@Override
 	protected void checkDrone(DroneArena da) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
-	protected void adjustDrone() {
+	protected void adjustDrone(double speed) {
 		// TODO Auto-generated method stub
 		
 	}

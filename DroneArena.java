@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class DroneArena{
-	double xDim, yDim;
+	private double xDim, yDim;
+	private double score;
 	private ArrayList<Drone> allDrones;
 	ArrayList<String> droneStrings;
 	
@@ -14,12 +15,13 @@ public class DroneArena{
 	
 	
 	
-	public DroneArena(double xDim, double yDim, double speed) {
+	public DroneArena(double xDim, double yDim, double speed, double score) {
 		//parameters
 		
 		this.xDim = xDim;
 		this.yDim = yDim;
 		this.speed = speed;
+		this.score = score;
 		
 		
 		
@@ -35,6 +37,24 @@ public class DroneArena{
 	
 	
 	//functions------------------------------------------------------------------
+	public boolean checkDroneMax() {
+		
+		if(allDrones.size() == 30) {
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
+	
+	public boolean checkDroneMin() {
+		if(allDrones.size() == 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	public void removeLastDrone() {
 		allDrones.remove(allDrones.size()-1);
 	}
@@ -86,7 +106,7 @@ public class DroneArena{
 	 */
 	public void adjustDrones() {
 		for (Drone d : allDrones) {
-			d.adjustDrone();
+			d.adjustDrone(speed);
 		}
 	}
 	
@@ -100,15 +120,19 @@ public class DroneArena{
 	 * @param notID			identify of ball not to be checked
 	 * @return				new angle 
 	 */
-	public double findDroneAngle(double xPos, double yPos, double rad, double angle, int notID) {
+	public double findDroneAngle(double xPos, double yPos, double rad, double angle, int notID, Drone currentDrone) {
 		double ans = angle;
 		if (xPos <= rad || xPos >= xDim - rad) ans = 180 - ans;
 			// if Drone hit (tried to go through) left or right walls, set mirror angle, being 180-angle
 		if (yPos <= rad || yPos >= yDim - rad) ans = - ans;
 			// if try to go off top or bottom, set mirror angle
 		
-		for (Drone d : allDrones) 
-			if (d.getID() != notID && d.hitting(xPos, yPos, rad)) ans = 180*Math.atan2(yPos-d.getYPos(), xPos-d.getXPos())/Math.PI; //dont we need to set angle mirrored??
+		for (Drone hitDrone : allDrones) 
+			if (hitDrone.getID() != notID && hitDrone.hitting(xPos, yPos, rad)) {
+				ans = 180*Math.atan2(yPos-hitDrone.getYPos(), xPos-hitDrone.getXPos())/Math.PI; //dont we need to set angle mirrored??
+					if(hitDrone instanceof TargetDrone && currentDrone instanceof AttackDrone) { score++;}
+			}
+				
 				// check all balls except one with given id
 				// if hitting, return angle between the other ball and this one.
 		
@@ -128,7 +152,7 @@ public class DroneArena{
 	
 	@Override
 	public String toString() {
-		String aSize = "Arena size is " + xDim + " by " + yDim + " and has a speed level of " + speed;
+		String aSize = "Arena size is " + xDim + " by " + yDim + " , has a speed level of " + speed + " and score " + score;
 		String dPos = "";
 		
 		if(allDrones.isEmpty()){
@@ -157,5 +181,13 @@ public class DroneArena{
 	 */
 	public double getYSize() {
 		return yDim;
+	}
+	
+	public double getScore() {
+		return score;
+	}
+	
+	public void setSpeed(Number speed) {
+		this.speed = (double) speed;
 	}
 }

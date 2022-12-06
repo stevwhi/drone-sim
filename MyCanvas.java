@@ -34,6 +34,7 @@ public class MyCanvas {
 		return xCanvasSize;
 	}
 	public int getYCanvasSize() {
+		
 		return yCanvasSize;
 	}
 	/**

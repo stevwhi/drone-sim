@@ -12,6 +12,8 @@ import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,9 +27,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -47,8 +51,9 @@ public class DroneViewer extends Application{
 	
 	private Stage stage;
 	private AnimationTimer timer;								
-	private VBox rtPane, ltPane;
+	private VBox rtPane, ltBotPane, ltTopPane;
 	private Button btnStart, btnStop;
+	private Slider slider;
 	
 	private DroneArena da;
 	private MyCanvas mc;
@@ -70,6 +75,17 @@ public class DroneViewer extends Application{
 		//file drop-down
 		Menu mFile = new Menu("File");
 		
+		MenuItem mNew = new MenuItem("New Arena");
+		mNew.setOnAction(new EventHandler<ActionEvent>() {
+		public void handle(ActionEvent a) {
+				timer.stop();
+        		offColour();	
+        		da = new DroneArena(canvasSize, canvasSize, 15, 0);
+        		drawWorld();
+        		drawStatus();
+			}
+		});
+		
 		
 		MenuItem mSave = new MenuItem("Save Arena");
 		mSave.setOnAction(new EventHandler<ActionEvent>() {
@@ -88,6 +104,8 @@ public class DroneViewer extends Application{
         		loadArena(loadArenaInfo());
 			}
 		});
+		
+		
 		
 		
 		MenuItem mExit = new MenuItem("Exit");
@@ -161,9 +179,15 @@ public class DroneViewer extends Application{
 	        	//gui input of speed
 	        	//double speed = 0;
 	        	
-	        	da.addAttackDrone(ranGen.nextDouble(da.getXSize()), ranGen.nextDouble(da.getYSize()), ranGen.nextDouble(360));								
-	           	drawWorld();
-	           	drawStatus();
+	        	if(!da.checkDroneMax()) {
+	        		da.addAttackDrone(ranGen.nextDouble(da.getXSize()), ranGen.nextDouble(da.getYSize()), ranGen.nextDouble(360));								
+		           	drawWorld();
+		           	drawStatus();
+	        	} else {
+	        		showMaxMessage();
+	        	}
+	        	
+	        	
 	       }
 	    });
 	    
@@ -176,9 +200,14 @@ public class DroneViewer extends Application{
 	        	//gui input of speed
 	        	//double speed = 0;
 	      
-	        	da.addDefenderDrone(ranGen.nextDouble(da.getXSize()), ranGen.nextDouble(da.getYSize()), ranGen.nextDouble(360));								
-	           	drawWorld();
-	           	drawStatus();
+	        	if(!da.checkDroneMax()) {
+	        		da.addDefenderDrone(ranGen.nextDouble(da.getXSize()), ranGen.nextDouble(da.getYSize()), ranGen.nextDouble(360));								
+		           	drawWorld();
+		           	drawStatus();
+	        	} else {
+	        		showMaxMessage();
+	        	}
+	        	
 	       }
 	    });
 	    
@@ -190,24 +219,36 @@ public class DroneViewer extends Application{
 	           	
 	        	//put -getradius size so it doesnt spawn outside arena
 	        	
-	        	da.addTargetDrone(ranGen.nextDouble(da.getYSize()), ranGen.nextDouble(da.getYSize()));								
-	           	drawWorld();
-	           	drawStatus();
+	        	
+	        	if(!da.checkDroneMax()) {
+	        		
+	        		da.addTargetDrone(ranGen.nextDouble(da.getYSize()), ranGen.nextDouble(da.getYSize()));								
+		           	drawWorld();
+		           	drawStatus();
+	        	} else {
+	        		showMaxMessage();
+	        	}
+	        	
+	        	
 	       }
 	    });
 	    
 	    
 	    Button btnRemove = new Button("Remove Drone");
 	    btnRemove.setStyle("-fx-background-color: #ffffff; \n-fx-text-fill: #000000; \n -fx-border-color: #000000;");
-	    btnTarget.setOnAction(new EventHandler<ActionEvent>() {
+	    btnRemove.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
 	           	
+	        	if(!da.checkDroneMin()) {
+	        		da.removeLastDrone();							
+		           	drawWorld();
+		           	drawStatus();
+	        	} else {
+	        		showMinMessage();
+	        	}
+	   	
 	        	
-	   
-	        	da.removeLastDrone();							
-	           	drawWorld();
-	           	drawStatus();
 	       }
 	    });
 	    
@@ -215,7 +256,54 @@ public class DroneViewer extends Application{
 	    
 	    	
 	    												
-	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label("Add: "), btnAttack, btnDefend, btnTarget);
+	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label("Add: "), btnAttack, btnDefend, btnTarget, btnRemove);
+	}
+	
+	private VBox setSpeedSelector() {
+		Label label = new Label("Speed Selector");
+        Label displayLabel = new Label(" ");
+ 
+        // set the color of the text
+        displayLabel.setTextFill(Color.BLACK);
+ 
+        // create slider
+        slider = new Slider(0, 30, 15);
+  
+ 
+     // enable the marks
+        slider.setShowTickMarks(true);
+ 
+        // enable the Labels
+        slider.setShowTickLabels(true);
+ 
+        // set Major tick unit
+        slider.setMajorTickUnit(5);
+        // sets the value of the property
+        // blockIncrement
+        slider.setBlockIncrement(4);
+        
+        displayLabel.textProperty().setValue("15");
+		
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(
+               ObservableValue<? extends Number> observableValue, 
+               Number oldValue, 
+               Number newValue) { 
+                  displayLabel.textProperty().setValue(String.valueOf(newValue.intValue()));
+                  da.setSpeed(newValue.doubleValue());
+              }
+        
+    });
+		
+		
+		
+		
+		ltBotPane = new VBox();
+		ltBotPane.getChildren().addAll(label, displayLabel, slider);
+		
+		return ltBotPane;
 	}
 	
 	
@@ -253,12 +341,19 @@ public class DroneViewer extends Application{
 	}
 	
 	/**
-	 * function to show in a box ABout the programme
+	 * function to show in a box About the programme
 	 */
 	private void showAbout() {
 		showMessage("About", "RJM's Solar System Demonstrator");
 	}	
 	
+	private void showMaxMessage() {
+		showMessage("Oh No", "Max drone capacity reached");
+	}
+	
+	private void showMinMessage() {
+		showMessage("Oh No", "No drones to remove");
+	}
 	/** 
 	 * draw the world 
 	 */
@@ -273,13 +368,18 @@ public class DroneViewer extends Application{
 	public void drawStatus() {
 		//clear
 		rtPane.getChildren().clear();
+		ltTopPane.getChildren().clear();
 		
 		//display
 		droneStrings = da.describeAll();
 		for (String s : droneStrings) {
 			Label l = new Label(s); 		// turn description into a label
 			rtPane.getChildren().add(l);	// add label	
-		}	
+		}
+		
+		Label lab = new Label("Score: " + Math.round(da.getScore()));
+		ltTopPane.getChildren().add(lab);
+		
 	}
 	
 	private void saveArena(DroneArena da) {
@@ -345,8 +445,8 @@ public class DroneViewer extends Application{
 		
 		System.out.println(ai);
     	
-    	double[] arenaParams = new double[2];
-    	double[] droneParams = new double[4];
+    	double[] arenaParams = new double[4];
+    	double[] droneParams = new double[3];
     	String droneType = "";
     	int arenaCounter = 0;
     	int droneCounter = 0;
@@ -362,39 +462,43 @@ public class DroneViewer extends Application{
     				//number on first line
     				if(i == 0 && isNumeric(words[j])) {
     					
+    					
+    					
         				arenaParams[arenaCounter] = Double.parseDouble(words[j]);
         				arenaCounter++;
         			} else if(i != 0 && isNumeric(words[j])) {
         				
         				droneParams[droneCounter] = Double.parseDouble(words[j]);
         				droneCounter++;
-        				System.out.println(droneCounter + "------ " + words[j]);
+        				
         			}
         			else if(words[j].equals("Attack") || words[j].equals("Defender") || words[j].equals("Target")){
         				droneType = words[j];
         			}
-    				System.out.println(i + ", " + j);
+    				
         		}
     			
     			
-    			if(arenaCounter == 3) {
-    				
-    				da = new DroneArena(arenaParams[0], arenaParams[1], arenaParams[2]);
-    				//add speed parameter adjuster
+    			if(arenaCounter == 4) {
+    				System.out.println(arenaParams[0] + ", " + arenaParams[1]+ ", "+ arenaParams[2] +", " +arenaParams[3]);
+    				da = new DroneArena(arenaParams[0], arenaParams[1], arenaParams[2], arenaParams[3]);
+    				slider.setValue(arenaParams[2]);
     				
     				arenaCounter = 0;
-    			}else if(droneCounter == 4 && droneType.equals("Attack")) {
-    				
+    			}else if(droneCounter == 3 && droneType.equals("Attack")) {
+    				System.out.println(droneParams[0] + ", " + droneParams[1] + ", " + droneParams[2]);
     				da.addAttackDrone(droneParams[0], droneParams[1], droneParams[2]);
     				droneType = "";
     				droneCounter = 0;
     			}
-    			else if(droneCounter == 4 && droneType.equals("Defender")) {
+    			else if(droneCounter == 3 && droneType.equals("Defender")) {
+    				System.out.println(droneParams[0] + ", " + droneParams[1]+ ", "+ droneParams[2]);
     				da.addDefenderDrone(droneParams[0], droneParams[1], droneParams[2]);
     				droneType = "";
     				droneCounter = 0;
     			}
     			else if(droneCounter == 2 && droneType.equals("Target")) {
+    				System.out.println(droneParams[0] + ", " + droneParams[1]);
     				da.addTargetDrone(droneParams[0], droneParams[1]);
     				droneType = "";
     				droneCounter = 0;
@@ -462,6 +566,7 @@ public class DroneViewer extends Application{
 		//main
 		stagePrimary.setTitle("Drone Simulator");
 		BorderPane bp = new BorderPane();
+		BorderPane bordp = new BorderPane();
 		bp.setPadding(new Insets(10, 20, 10, 20));
 		
 		//top
@@ -476,14 +581,19 @@ public class DroneViewer extends Application{
 		grp.getChildren().add(canvas);
 		bp.setCenter(grp);
 		mc = new MyCanvas(canvas.getGraphicsContext2D(), canvasSize, canvasSize);
-		da = new DroneArena(canvasSize, canvasSize, 15);
+		da = new DroneArena(canvasSize, canvasSize, 15, 0);
 		drawWorld();
 		
 		 //GraphicsContext gc = canvas.getGraphicsContext2D();
 		 //gc.strokeText("drone simulation", 1, 1);
 
 		//left
-		ltPane = new VBox();
+		ltTopPane = new VBox();
+		ltBotPane = new VBox();
+		
+		bp.setLeft(bordp);
+		bordp.setBottom(setSpeedSelector());
+		bordp.setTop(ltTopPane);
 		
 		
 		//right
@@ -500,6 +610,8 @@ public class DroneViewer extends Application{
 				drawStatus();
 			}
 		};
+		
+		
 		
 		drawStatus();
 		//finalise
