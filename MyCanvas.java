@@ -26,7 +26,7 @@ public class MyCanvas {
 		xCanvasSize = xcs;
 		yCanvasSize = ycs;
 		
-		gc.strokeText("drone simulation", 1, 1);
+		
 		
 	}
 
@@ -76,6 +76,8 @@ public class MyCanvas {
 		case 'b' :	ans = Color.BLUE;
 		break;
 		case 'o' :	ans = Color.ORANGE;
+		break;
+		case 'x' :	ans = Color.BLACK;
 		break;
 		}
 		return ans;
