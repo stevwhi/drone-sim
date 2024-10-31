@@ -454,10 +454,7 @@ public class DroneViewer extends Application{
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-    		}else {
-    			System.out.println("not a file");
     		}
-    	
     	
     	return arenaInfo;
 	}

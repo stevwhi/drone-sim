@@ -50,7 +50,7 @@ public class DroneArena{
 	 * @return boolean whether max no. of drones reached
 	 */
 	public boolean checkDroneMax() {
-		if(allDrones.size() == 40) {
+		if(allDrones.size() == 36) {
 			return true;
 		}else {
 			return false;

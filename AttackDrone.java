@@ -6,7 +6,7 @@ package droneGUI;
  */
 public class AttackDrone extends Drone{
 
-	double angle, speed;		//movement parameters
+	protected double angle, speed;		//movement parameters
 	
 	/** Create Attack Drone, size rad at xPos,yPos, moving at angle: angle and speed: speed 
 	 * @param xPos		x-coordinate of drone

@@ -6,7 +6,7 @@ package droneGUI;
  */
 public class DefenderDrone extends Drone{
 	
-	double angle, speed; 	//movement parameters
+	protected double angle, speed; 	//movement parameters
 	
 	/**
 	 * construct defender drone at position xPos, yPos
